@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={cn("antialiased", inter.className)}>
+        <body className={cn("antialiased bg-dark-2", inter.className)}>
           <main>{children}</main>
         </body>
       </html>
