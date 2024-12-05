@@ -1,18 +1,23 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ReactDatePicker from "react-datepicker";
+import { useUser } from "@clerk/nextjs";
+import { Call, useStreamVideoClient } from "@stream-io/video-react-sdk";
 
 import MeetingCard from "@/features/home/components/meeting-cards/meeting-card";
 import MeetingModal from "@/features/home/components/meeting-cards/meeting-modal";
 import { MEETING_CARD_ITEMS } from "@/features/home/core/constants";
+import { useMeetingType } from "@/features/home/core/hooks";
 
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { toast } from "@/lib/utils";
 
 import "react-datepicker/dist/react-datepicker.css";
-import { useMeetingType } from "../../core/hooks";
+import Loader from "@/components/loader";
 
 const initialValues = {
   dateTime: new Date(),
@@ -22,11 +27,57 @@ const initialValues = {
 
 const MeetingCards = () => {
   const [values, setValues] = useState(initialValues);
+  const [callDetail, setCallDetail] = useState<Call>();
+  const router = useRouter();
+  const client = useStreamVideoClient();
+  const { user } = useUser();
   const { meetingType, setMeetingType } = useMeetingType();
 
   const meetingCardItems = MEETING_CARD_ITEMS({ setMeetingType });
 
   const handleClose = () => setMeetingType("");
+
+  const createMeeting = async () => {
+    if (!client || !user) return;
+
+    try {
+      if (!values.dateTime) {
+        toast.error("Please select a date and time");
+
+        return;
+      }
+      const id = crypto.randomUUID();
+      const call = client.call("default", id);
+      if (!call) throw new Error("Failed to create meeting");
+
+      const startsAt =
+        values.dateTime.toISOString() || new Date(Date.now()).toISOString();
+      const description = values.description || "Instant meeting";
+
+      await call.getOrCreate({
+        data: {
+          starts_at: startsAt,
+          custom: { description },
+        },
+      });
+      setCallDetail(call);
+      if (!values.description) router.push(`/meeting/${call.id}`);
+    } catch (error) {
+      console.error(error);
+
+      toast.error("Failed to create Meeting");
+    }
+  };
+
+  if (!client || !user) return <Loader />;
+
+  const meetingLink = `${process.env.NEXT_PUBLIC_APP_URL}/meeting/${callDetail?.id}`;
+
+  const copyMeetingLink = () => {
+    navigator.clipboard.writeText(meetingLink);
+
+    toast.success("Link Copied");
+  };
 
   return (
     <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
@@ -50,6 +101,7 @@ const MeetingCards = () => {
         title="Start an Instant Meeting"
         buttonText="Start Meeting"
         className="text-center"
+        handleClick={createMeeting}
       />
       <MeetingModal
         isOpen={meetingType === "join-meeting"}
@@ -57,6 +109,7 @@ const MeetingCards = () => {
         title="Type the link here"
         buttonText="Join Meeting"
         className="text-center"
+        handleClick={createMeeting}
       >
         <Input
           value={values.link}
@@ -65,40 +118,54 @@ const MeetingCards = () => {
           onChange={(e) => setValues({ ...values, link: e.target.value })}
         />
       </MeetingModal>
-      <MeetingModal
-        isOpen={meetingType === "schedule-meeting"}
-        onClose={handleClose}
-        title="Create Meeting"
-        buttonText="Schedule Meeting"
-        className="text-center"
-      >
-        <div className="space-y-2.5">
-          <Label className="text-base font-normal leading-[22.4px] text-sky-2">
-            Add a description
-          </Label>
-          <Textarea
-            className="border-none bg-dark-3 focus-visible:ring-0 focus-visible:ring-offset-0"
-            onChange={(e) =>
-              setValues({ ...values, description: e.target.value })
-            }
-          />
-        </div>
-        <div className="flex flex-col space-y-2.5">
-          <Label className="block text-base font-normal leading-[22.4px] text-sky-2">
-            Select Date and Time
-          </Label>
-          <ReactDatePicker
-            selected={values.dateTime}
-            onChange={(date) => setValues({ ...values, dateTime: date! })}
-            showTimeSelect
-            timeFormat="HH:mm"
-            timeIntervals={15}
-            timeCaption="time"
-            dateFormat="MMMM d, yyyy h:mm aa"
-            className="w-full rounded p-2 bg-dark-3 focus:outline-none"
-          />
-        </div>
-      </MeetingModal>
+      {!callDetail ? (
+        <MeetingModal
+          isOpen={meetingType === "schedule-meeting"}
+          onClose={handleClose}
+          title="Create Meeting"
+          buttonText="Schedule Meeting"
+          className="text-center"
+          handleClick={createMeeting}
+        >
+          <div className="space-y-2.5">
+            <Label className="text-base font-normal leading-[22.4px] text-sky-2">
+              Add a description
+            </Label>
+            <Textarea
+              className="border-none bg-dark-3 focus-visible:ring-0 focus-visible:ring-offset-0"
+              onChange={(e) =>
+                setValues({ ...values, description: e.target.value })
+              }
+            />
+          </div>
+          <div className="flex flex-col space-y-2.5">
+            <Label className="block text-base font-normal leading-[22.4px] text-sky-2">
+              Select Date and Time
+            </Label>
+            <ReactDatePicker
+              selected={values.dateTime}
+              onChange={(date) => setValues({ ...values, dateTime: date! })}
+              showTimeSelect
+              timeFormat="HH:mm"
+              timeIntervals={15}
+              timeCaption="time"
+              dateFormat="MMMM d, yyyy h:mm aa"
+              className="w-full rounded p-2 bg-dark-3 focus:outline-none"
+            />
+          </div>
+        </MeetingModal>
+      ) : (
+        <MeetingModal
+          isOpen={meetingType === "schedule-meeting"}
+          onClose={handleClose}
+          title="Meeting Created"
+          image="/icons/checked.svg"
+          buttonIcon="/icons/copy.svg"
+          buttonText="Copy Meeting Link"
+          className="text-center"
+          handleClick={copyMeetingLink}
+        ></MeetingModal>
+      )}
     </div>
   );
 };
