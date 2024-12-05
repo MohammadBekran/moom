@@ -9,7 +9,7 @@ import "@/app/globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Moom",
+  title: "MOOM",
   description: "Video calling application",
 };
 

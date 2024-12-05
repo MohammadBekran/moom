@@ -21,7 +21,7 @@ export const SIDEBAR_ITEMS = [
   },
   {
     path: "/personal-room",
-    label: "Personal room",
+    label: "Personal Room",
     imageUrl: "/icons/add-personal.svg",
   },
 ] as const;
