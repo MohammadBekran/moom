@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
 import ClerkProvider from "@/components/partials/providers/clerk-provider";
+import NuqsProvider from "@/components/partials/providers/nuqs-provider";
 import { cn } from "@/lib/utils";
 
 import "@/app/globals.css";
@@ -22,7 +23,9 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body className={cn("antialiased bg-dark-2", inter.className)}>
-          <main>{children}</main>
+          <main>
+            <NuqsProvider>{children}</NuqsProvider>
+          </main>
         </body>
       </html>
     </ClerkProvider>
