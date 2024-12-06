@@ -1,9 +1,7 @@
-import { DialogTitle } from "@radix-ui/react-dialog";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import Image from "next/image";
 
+import ResponsiveModal from "@/components/responsive-modal";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 
 interface IMeetingModalProps {
@@ -32,42 +30,37 @@ const MeetingModal = ({
   onClose,
 }: IMeetingModalProps) => {
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-full max-w-[520px] flex flex-col gap-6 border-none py9 px-6 bg-dark-1 text-white">
-        <VisuallyHidden>
-          <DialogTitle></DialogTitle>
-        </VisuallyHidden>
-        <div className="space-y-6">
-          {image && (
-            <div className="flex justify-center">
-              <Image src={image} alt="checked" width={72} height={72} />
-            </div>
+    <ResponsiveModal
+      open={isOpen}
+      className="flex flex-col gap-6 border-none py-9 px-6 text-white"
+      background="bg-dark-1"
+      onOpenChange={onClose}
+    >
+      <div className="space-y-6">
+        {image && (
+          <div className="flex justify-center">
+            <Image src={image} alt="checked" width={72} height={72} />
+          </div>
+        )}
+        <h1 className={cn("text-3xl font-bold leading-[42px]", className)}>
+          {title}
+        </h1>
+        {children}
+        <Button
+          className={cn(
+            "w-full bg-blue-1 focus-visible:ring-0 focus-visible:ring-offset-0",
+            buttonClassName
           )}
-          <h1 className={cn("text-3xl font-bold leading-[42px]", className)}>
-            {title}
-          </h1>
-          {children}
-          <Button
-            className={cn(
-              "w-full bg-blue-1 focus-visible:ring-0 focus-visible:ring-offset-0",
-              buttonClassName
-            )}
-            onClick={handleClick}
-          >
-            {buttonIcon && (
-              <Image
-                src={buttonIcon}
-                alt="Button icon"
-                width={13}
-                height={13}
-              />
-            )}
-            &nbsp;
-            {buttonText}
-          </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
+          onClick={handleClick}
+        >
+          {buttonIcon && (
+            <Image src={buttonIcon} alt="Button icon" width={13} height={13} />
+          )}
+          &nbsp;
+          {buttonText}
+        </Button>
+      </div>
+    </ResponsiveModal>
   );
 };
 

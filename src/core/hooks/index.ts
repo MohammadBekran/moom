@@ -2,19 +2,20 @@ import { useUser } from "@clerk/nextjs";
 import { Call, useStreamVideoClient } from "@stream-io/video-react-sdk";
 import { useEffect, useState } from "react";
 
-const useGetCalls = (id: string | string[]) => {
+const useGetCalls = () => {
   const { user } = useUser();
-  const [calls, setCalls] = useState<Call[]>();
   const client = useStreamVideoClient();
-  const [isLoading, setIsLoading] = useState(true);
+  const [calls, setCalls] = useState<Call[]>();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const loadCall = async () => {
+    const loadCalls = async () => {
       if (!client || !user?.id) return;
 
       setIsLoading(true);
 
       try {
+        // https://getstream.io/video/docs/react/guides/querying-calls/#filters
         const { calls } = await client.queryCalls({
           sort: [{ field: "starts_at", direction: -1 }],
           filter_conditions: {
@@ -29,20 +30,28 @@ const useGetCalls = (id: string | string[]) => {
         setCalls(calls);
       } catch (error) {
         console.error(error);
-
-        setIsLoading(false);
       } finally {
         setIsLoading(false);
       }
     };
 
-    loadCall();
-  }, [client, id, user?.id]);
+    loadCalls();
+  }, [client, user?.id]);
 
-  return { calls, isLoading };
+  const now = new Date();
+
+  const endedCalls = calls?.filter(({ state: { startsAt, endedAt } }: Call) => {
+    return (startsAt && new Date(startsAt) < now) || !!endedAt;
+  });
+
+  const upcomingCalls = calls?.filter(({ state: { startsAt } }: Call) => {
+    return startsAt && new Date(startsAt) > now;
+  });
+
+  return { endedCalls, upcomingCalls, callRecordings: calls, isLoading };
 };
 
-const useGetCallById = (id: string | string[]) => {
+const useGetCallById = ({ id }: { id: string | string[] }) => {
   const [call, setCall] = useState<Call>();
   const [isCallLoading, setIsCallLoading] = useState(true);
 

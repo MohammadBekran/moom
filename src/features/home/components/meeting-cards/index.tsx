@@ -61,6 +61,7 @@ const MeetingCards = () => {
         },
       });
       setCallDetail(call);
+
       if (!values.description) router.push(`/meeting/${call.id}`);
     } catch (error) {
       console.error(error);
