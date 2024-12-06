@@ -1,23 +1,23 @@
 "use client";
 
+import { useUser } from "@clerk/nextjs";
+import { Call, useStreamVideoClient } from "@stream-io/video-react-sdk";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ReactDatePicker from "react-datepicker";
-import { useUser } from "@clerk/nextjs";
-import { Call, useStreamVideoClient } from "@stream-io/video-react-sdk";
 
-import MeetingCard from "@/features/home/components/meeting-cards/meeting-card";
+import HomeMeetingCard from "@/features/home/components/meeting-cards/home-meeting-card";
 import MeetingModal from "@/features/home/components/meeting-cards/meeting-modal";
 import { MEETING_CARD_ITEMS } from "@/features/home/core/constants";
 import { useMeetingType } from "@/features/home/core/hooks";
 
+import Loader from "@/components/loader";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { toast } from "@/lib/utils";
+import { Textarea } from "@/components/ui/textarea";
+import { copyText, toast } from "@/lib/utils";
 
 import "react-datepicker/dist/react-datepicker.css";
-import Loader from "@/components/loader";
 
 const initialValues = {
   dateTime: new Date(),
@@ -40,6 +40,8 @@ const MeetingCards = () => {
   const createMeeting = async () => {
     if (!client || !user) return;
 
+    console.log(values);
+
     try {
       if (!values.dateTime) {
         toast.error("Please select a date and time");
@@ -60,9 +62,12 @@ const MeetingCards = () => {
           custom: { description },
         },
       });
+
       setCallDetail(call);
 
       if (!values.description) router.push(`/meeting/${call.id}`);
+
+      toast.success("Meeting created");
     } catch (error) {
       console.error(error);
 
@@ -74,19 +79,13 @@ const MeetingCards = () => {
 
   const meetingLink = `${process.env.NEXT_PUBLIC_APP_URL}/meeting/${callDetail?.id}`;
 
-  const copyMeetingLink = () => {
-    navigator.clipboard.writeText(meetingLink);
-
-    toast.success("Link Copied");
-  };
-
   return (
     <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
       {meetingCardItems.map((item) => {
         const { image, title, description, className, handleClick } = item;
 
         return (
-          <MeetingCard
+          <HomeMeetingCard
             key={image}
             image={image}
             title={title}
@@ -110,7 +109,7 @@ const MeetingCards = () => {
         title="Type the link here"
         buttonText="Join Meeting"
         className="text-center"
-        handleClick={createMeeting}
+        handleClick={() => router.push(values.link)}
       >
         <Input
           value={values.link}
@@ -164,8 +163,8 @@ const MeetingCards = () => {
           buttonIcon="/icons/copy.svg"
           buttonText="Copy Meeting Link"
           className="text-center"
-          handleClick={copyMeetingLink}
-        ></MeetingModal>
+          handleClick={() => copyText(meetingLink)}
+        />
       )}
     </div>
   );

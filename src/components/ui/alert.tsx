@@ -11,9 +11,9 @@ interface IAlertProps {
 
 const Alert = ({ title, iconUrl }: IAlertProps) => {
   return (
-    <section>
+    <section className="h-full min-h-screen flex justify-center items-center">
       <Card className="w-full max-w-[520px] border-none p-6 py-9 bg-dark-1 text-white">
-        <CardContent>
+        <CardContent className="space-y-7">
           <div className="flex flex-col gap-3.5">
             {iconUrl && (
               <div className="flex justify-center items-center">
@@ -22,7 +22,7 @@ const Alert = ({ title, iconUrl }: IAlertProps) => {
             )}
             <p className="text-center text-xl font-semibold">{title}</p>
           </div>
-          <Button asChild className="bg-blue-1">
+          <Button asChild className="w-full bg-blue-1">
             <Link href="/">Back to Home</Link>
           </Button>
         </CardContent>

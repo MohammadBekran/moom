@@ -15,8 +15,7 @@ const NavigationLinks = ({ mobileNavbar }: { mobileNavbar?: boolean }) => {
       {SIDEBAR_ITEMS.map((item, index) => {
         const { path, label, imageUrl } = item;
 
-        const isActive =
-          pathname === item.path || pathname.startsWith(item.path);
+        const isActive = pathname === item.path;
 
         return (
           <li key={`${path}-${index}`}>

@@ -14,8 +14,8 @@ const MeetingSetup = ({
 }: {
   setIsSetupComplete: (value: boolean) => void;
 }) => {
-  const { useCallEndedAt, useCallStartedAt } = useCallStateHooks();
-  const callStartsAt = useCallStartedAt();
+  const { useCallEndedAt, useCallStartsAt } = useCallStateHooks();
+  const callStartsAt = useCallStartsAt();
   const callEndedAt = useCallEndedAt();
   const callTimeNotArrived =
     callStartsAt && new Date(callStartsAt) > new Date();
@@ -42,7 +42,7 @@ const MeetingSetup = ({
   if (callTimeNotArrived) {
     return (
       <Alert
-        title={`Your Meeting has not started yet. It is scheduled for ${callStartsAt.toLocaleDateString()}`}
+        title={`Your Meeting has not started yet. It is scheduled for ${callStartsAt.toLocaleString()}`}
       />
     );
   }

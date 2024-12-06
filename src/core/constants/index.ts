@@ -1,4 +1,4 @@
-export const SIDEBAR_ITEMS = [
+const SIDEBAR_ITEMS = [
   {
     path: "/",
     label: "Home",
@@ -25,3 +25,13 @@ export const SIDEBAR_ITEMS = [
     imageUrl: "/icons/add-personal.svg",
   },
 ] as const;
+
+const USER_AVATAR_IMAGES = [
+  "/images/avatar-1.jpeg",
+  "/images/avatar-2.jpeg",
+  "/images/avatar-3.png",
+  "/images/avatar-4.png",
+  "/images/avatar-5.png",
+] as const;
+
+export { SIDEBAR_ITEMS, USER_AVATAR_IMAGES };

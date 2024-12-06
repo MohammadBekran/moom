@@ -6,4 +6,10 @@ const cn = (...inputs: ClassValue[]) => {
   return twMerge(clsx(inputs));
 };
 
-export { cn, toast };
+const copyText = (text: string) => {
+  navigator.clipboard.writeText(text);
+
+  toast.success("Copied");
+};
+
+export { cn, copyText, toast };
