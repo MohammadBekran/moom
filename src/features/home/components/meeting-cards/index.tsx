@@ -33,7 +33,10 @@ const MeetingCards = () => {
   const { user } = useUser();
   const { meetingType, setMeetingType } = useMeetingType();
 
-  const meetingCardItems = MEETING_CARD_ITEMS({ setMeetingType });
+  const meetingCardItems = MEETING_CARD_ITEMS({
+    setMeetingType,
+    onClickRecordings: () => router.push("/recordings"),
+  });
 
   const handleClose = () => setMeetingType("");
 

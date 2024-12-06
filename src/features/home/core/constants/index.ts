@@ -1,7 +1,9 @@
 export const MEETING_CARD_ITEMS = ({
   setMeetingType,
+  onClickRecordings,
 }: {
   setMeetingType: (meetingType: string) => void;
+  onClickRecordings: () => void;
 }) => [
   {
     image: "/icons/add-meeting.svg",
@@ -29,6 +31,6 @@ export const MEETING_CARD_ITEMS = ({
     title: "View Recordings",
     description: "Meeting Recordings",
     className: "bg-yellow-1",
-    handleClick: () => {},
+    handleClick: onClickRecordings,
   },
 ];

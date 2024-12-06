@@ -70,6 +70,13 @@
   @apply h-full rounded-xl p-3 bg-dark-1;
 }
 
+/* Clerk */
+.cl-button,
+.cl-button:hover,
+.cl-badge {
+  @apply text-white;
+}
+
 /* Custom classes */
 .hide-scrollbar {
   -ms-overflow-style: none;
