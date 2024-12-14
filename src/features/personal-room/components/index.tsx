@@ -37,7 +37,7 @@ const PersonalRoom = () => {
       });
     }
 
-    router.push(`/meeting/${meetingId}`);
+    router.push(`/meeting/${meetingId}?personal=true`);
   };
 
   const handleCopyInviteLink = () => copyText(inviteLink);

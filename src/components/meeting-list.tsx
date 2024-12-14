@@ -9,6 +9,7 @@ import Loader from "@/components/loader";
 import MeetingCard from "@/components/meeting-card";
 import { useGetCalls } from "@/core/hooks";
 import { EMeetingType } from "@/core/enum";
+import { toast } from "sonner";
 
 const MeetingList = ({ type }: { type: EMeetingType }) => {
   const [recordings, setRecordings] = useState<CallRecording[]>();
@@ -48,18 +49,24 @@ const MeetingList = ({ type }: { type: EMeetingType }) => {
 
   useEffect(() => {
     const fetchRecordingCalls = async () => {
-      const recordingsData = await Promise.all(
-        recordingCalls?.map(
-          async (meeting) => await meeting.queryRecordings()
-        ) ?? []
-      );
+      try {
+        const recordingsData = await Promise.all(
+          recordingCalls?.map(
+            async (meeting) => await meeting.queryRecordings()
+          ) ?? []
+        );
 
-      const recordingMeetings = recordingsData
-        .filter((call) => call.recordings.length > 0)
-        .flatMap((call) => call.recordings);
+        const recordingMeetings = recordingsData
+          .filter((call) => call.recordings.length > 0)
+          .flatMap((call) => call.recordings);
 
-      // @ts-expect-error an unexpected error
-      setRecordings(recordingMeetings);
+        // @ts-expect-error an unexpected error
+        setRecordings(recordingMeetings);
+      } catch (error) {
+        console.error(error);
+
+        toast.error("Try again later");
+      }
     };
 
     if (type === "recordings") fetchRecordingCalls();
