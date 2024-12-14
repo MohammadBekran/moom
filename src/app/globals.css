@@ -74,6 +74,42 @@
   @apply p-3;
 }
 
+.react-datepicker {
+  @apply !border-dark-3;
+}
+
+/* React Date Picker */
+.react-datepicker__day,
+.react-datepicker__time-list-item {
+  @apply transition-colors;
+}
+.react-datepicker,
+.react-datepicker__header,
+.react-datepicker__time-list {
+  @apply !bg-dark-3 !text-white;
+}
+
+.react-datepicker__time-list-item:hover,
+.react-datepicker__day:hover {
+  @apply !bg-dark-2;
+}
+
+.react-datepicker-time__header,
+.react-datepicker__current-month,
+.react-datepicker__day-name,
+.react-datepicker__day,
+.react-datepicker__day:hover {
+  @apply !text-white;
+}
+
+.react-datepicker__time-list::-webkit-scrollbar {
+  @apply bg-dark-2;
+}
+
+.react-datepicker__time-list::-webkit-scrollbar-thumb {
+  @apply bg-dark-1;
+}
+
 /* Clerk */
 .cl-button,
 .cl-button:hover,
