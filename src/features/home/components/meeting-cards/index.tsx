@@ -132,7 +132,6 @@ const MeetingCards = () => {
           onClose={handleClose}
           title="Create Meeting"
           buttonText="Schedule Meeting"
-          className="text-center"
           isLoading={isCreatingMeeting}
           handleClick={createMeeting}
         >
