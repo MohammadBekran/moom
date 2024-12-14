@@ -6,7 +6,7 @@ import {
   useCallStateHooks,
 } from "@stream-io/video-react-sdk";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMedia } from "react-use";
 
 import MeetingCallControls from "@/features/meeting/components/meeting-call-controls";
@@ -17,13 +17,17 @@ import ResponsiveModal from "@/components/responsive-modal";
 import { cn } from "@/lib/utils";
 
 const MeetingRoom = () => {
+  const isMobile = useMedia("(max-width: 1024px)", false);
   const [layout, setLayout] = useState<TCallLayout>("speaker-left");
   const [showParticipants, setShowParticipants] = useState(false);
   const searchParams = useSearchParams();
   const isPersonalRoom = !!searchParams.get("personal");
   const { useCallCallingState } = useCallStateHooks();
   const callingState = useCallCallingState();
-  const isMobile = useMedia("(max-width: 1024px)");
+
+  useEffect(() => {
+    setLayout(isMobile ? "grid" : "speaker-left");
+  }, [isMobile, layout]);
 
   if (callingState !== CallingState.JOINED) return <Loader />;
 
