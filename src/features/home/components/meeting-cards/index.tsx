@@ -43,8 +43,6 @@ const MeetingCards = () => {
   const createMeeting = async () => {
     if (!client || !user) return;
 
-    console.log(values);
-
     try {
       if (!values.dateTime) {
         toast.error("Please select a date and time");

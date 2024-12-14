@@ -5,17 +5,17 @@ const SIDEBAR_ITEMS = [
     imageUrl: "/icons/Home.svg",
   },
   {
-    path: "/upcoming",
+    path: "/meetings-list?type=upcoming",
     label: "Upcoming",
     imageUrl: "/icons/upcoming.svg",
   },
   {
-    path: "/previous",
+    path: "/meetings-list?type=ended",
     label: "Previous",
     imageUrl: "/icons/previous.svg",
   },
   {
-    path: "/recordings",
+    path: "/meetings-list?type=recordings",
     label: "Recordings",
     imageUrl: "/icons/video.svg",
   },

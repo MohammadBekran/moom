@@ -70,6 +70,10 @@
   @apply h-full rounded-xl p-3 bg-dark-1;
 }
 
+.str-video__speaker-layout__wrapper {
+  @apply p-3;
+}
+
 /* Clerk */
 .cl-button,
 .cl-button:hover,
@@ -84,5 +88,5 @@
 }
 
 .hide-scrollbar::-webkit-scrollbar {
-  display: none;
+  @apply hidden;
 }

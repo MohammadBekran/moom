@@ -1,30 +1,42 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { SIDEBAR_ITEMS } from "@/core/constants";
 import { cn } from "@/lib/utils";
 
-const NavigationLinks = ({ mobileNavbar }: { mobileNavbar?: boolean }) => {
+interface INavigationLinksProps {
+  mobileNavbar?: boolean;
+}
+
+const NavigationLinks = ({ mobileNavbar }: INavigationLinksProps) => {
   const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const type = searchParams.get("type");
+
+  const handleClickSidebarItem = ({ path }: { path: string }) => {
+    router.push(path);
+  };
 
   return (
     <ul className="space-y-6">
       {SIDEBAR_ITEMS.map((item, index) => {
         const { path, label, imageUrl } = item;
 
-        const isActive = pathname === item.path;
+        const meetingType = path.split("?type=")[1];
+        const isActive = pathname === item.path || type === meetingType;
 
         return (
           <li key={`${path}-${index}`}>
-            <Link
-              href={path}
+            <span
               className={cn(
-                "flex justify-start items-center gap-x-4 rounded-lg p-4",
+                "flex justify-start items-center gap-x-4 rounded-lg cursor-pointer p-4",
                 isActive && "bg-blue-1"
               )}
+              onClick={() => handleClickSidebarItem({ path })}
             >
               <Image
                 src={imageUrl}
@@ -40,7 +52,7 @@ const NavigationLinks = ({ mobileNavbar }: { mobileNavbar?: boolean }) => {
               >
                 {label}
               </span>
-            </Link>
+            </span>
           </li>
         );
       })}

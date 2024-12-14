@@ -65,7 +65,7 @@ const ResponsiveModal = ({
 
   return (
     <Drawer open={!!open} onOpenChange={handleOpenChange}>
-      <DrawerContent className={cn("border-none", background)}>
+      <DrawerContent className={cn("w-full border-none", background)}>
         <TitleVisuallyHidden />
         <div
           className={cn(

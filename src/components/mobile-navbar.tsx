@@ -1,7 +1,10 @@
+"use client";
+
 import Image from "next/image";
 import { UserButton } from "@clerk/nextjs";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
+import NavigationLinks from "@/components/navigation-links";
 import {
   Sheet,
   SheetContent,
@@ -9,15 +12,17 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import NavigationLinks from "@/components/navigation-links";
+import { useMobileMenu } from "@/core/hooks";
 
 const MobileNavbar = () => {
+  const { mobileMenu, setMobileMenu } = useMobileMenu();
+
   return (
     <div className="fixed z-40 w-full flex justify-between items-center py-4 px-6 lg:px-10 bg-dark-1">
       <Image src="./icons/mobile-logo.svg" alt="Logo" width={32} height={32} />
       <div className="flex gap-x-5">
         <UserButton />
-        <Sheet>
+        <Sheet open={mobileMenu} onOpenChange={setMobileMenu}>
           <SheetTrigger>
             <Image
               src="/icons/hamburger.svg"

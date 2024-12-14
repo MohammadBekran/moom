@@ -5,7 +5,7 @@ import Sidebar from "@/components/sidebar";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div>
+    <div className="text-white">
       <div className="hidden lg:block">
         <Navbar />
       </div>

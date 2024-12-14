@@ -1,5 +1,6 @@
 import { useUser } from "@clerk/nextjs";
 import { Call, useStreamVideoClient } from "@stream-io/video-react-sdk";
+import { parseAsBoolean, useQueryState } from "nuqs";
 import { useEffect, useState } from "react";
 
 const useGetCalls = () => {
@@ -87,4 +88,13 @@ const useGetCallById = ({ id }: { id: string | string[] }) => {
   return { call, isCallLoading };
 };
 
-export { useGetCallById, useGetCalls };
+const useMobileMenu = () => {
+  const [mobileMenu, setMobileMenu] = useQueryState(
+    "mobile-menu",
+    parseAsBoolean.withDefault(false).withOptions({ clearOnDefault: true })
+  );
+
+  return { mobileMenu, setMobileMenu };
+};
+
+export { useGetCallById, useGetCalls, useMobileMenu };
