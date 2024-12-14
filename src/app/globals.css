@@ -74,8 +74,9 @@
   @apply p-3;
 }
 
-.react-datepicker {
-  @apply !border-dark-3;
+.react-datepicker,
+.react-datepicker__time-container {
+  @apply !border-dark-2;
 }
 
 /* React Date Picker */
