@@ -28,6 +28,7 @@ const initialValues = {
 const MeetingCards = () => {
   const [values, setValues] = useState(initialValues);
   const [callDetail, setCallDetail] = useState<Call>();
+  const [isCreatingMeeting, setIsCreatingMeeting] = useState(false);
   const router = useRouter();
   const client = useStreamVideoClient();
   const { user } = useUser();
@@ -44,6 +45,8 @@ const MeetingCards = () => {
     if (!client || !user) return;
 
     try {
+      setIsCreatingMeeting(true);
+
       if (!values.dateTime) {
         toast.error("Please select a date and time");
 
@@ -70,9 +73,12 @@ const MeetingCards = () => {
 
       toast.success("Meeting created");
     } catch (error) {
-      console.error(error);
+      setIsCreatingMeeting(false);
 
+      console.error(error);
       toast.error("Failed to create Meeting");
+    } finally {
+      setIsCreatingMeeting(false);
     }
   };
 
@@ -102,6 +108,7 @@ const MeetingCards = () => {
         title="Start an Instant Meeting"
         buttonText="Start Meeting"
         className="text-center"
+        isLoading={isCreatingMeeting}
         handleClick={createMeeting}
       />
       <MeetingModal
@@ -126,6 +133,7 @@ const MeetingCards = () => {
           title="Create Meeting"
           buttonText="Schedule Meeting"
           className="text-center"
+          isLoading={isCreatingMeeting}
           handleClick={createMeeting}
         >
           <div className="space-y-2.5">

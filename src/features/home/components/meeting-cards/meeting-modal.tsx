@@ -12,6 +12,7 @@ interface IMeetingModalProps {
   buttonIcon?: string;
   className?: string;
   buttonClassName?: string;
+  isLoading?: boolean;
   children?: React.ReactNode;
   handleClick?: () => void;
   onClose: () => void;
@@ -25,6 +26,7 @@ const MeetingModal = ({
   buttonIcon,
   className,
   buttonClassName,
+  isLoading,
   children,
   handleClick,
   onClose,
@@ -51,6 +53,7 @@ const MeetingModal = ({
             "w-full bg-blue-1 focus-visible:ring-0 focus-visible:ring-offset-0",
             buttonClassName
           )}
+          disabled={isLoading}
           onClick={handleClick}
         >
           {buttonIcon && (
